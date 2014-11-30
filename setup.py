@@ -4,18 +4,18 @@ from setuptools import setup, find_packages
 from treeadmin import __version__ as version
 
 setup(
-    name = 'django-treeadmin',
+    name = 'ls-django-treeadmin',
     version = version,
     description = 'Tree UI for mptt-managed models, extracted from FeinCMS',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
-    author = 'Matthias Kestenholz  et al.',
-    author_email = 'mk@spinlock.ch',
-    url = 'https://www.github.com/piquadrat/django-treeadmin',
+    author = 'Scott Sharkey, Matthias Kestenholz  et al.',
+    author_email = 'ssharkey@lanshark.com',
+    url = 'https://www.github.com/lanshark/ls-django-treeadmin',
     packages = find_packages(),
     zip_safe=False,
     include_package_data = True,
     install_requires=[
-        'Django>=1.2',
+        'Django>=1.7',
         'django-mptt>=0.5',
     ],
     classifiers = [

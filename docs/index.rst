@@ -1,19 +1,23 @@
-django-treeadmin
-================
+ls-django-treeadmin
+===================
 
-django-treeadmin is a complement to models that are `django-mptt`_-enabled.
+ls-django-treeadmin is a complement to models that are `django-mptt`_-enabled.
 It provides a drag-&-drop interface to modify the tree.
 
 It was originally developed as part of `FeinCMS`_. They deserve all the kudos
 for this.
 
+This version is a fork of `piquadrat`'s version, updated for django 1.7.
+It is my intention to update to work with Python 3 as well.
+
 .. _django-mptt: https://github.com/django-mptt/django-mptt
 .. _FeinCMS: http://www.feinheit.ch/media/labs/feincms/
+.. _piquadrat: http://github.com/piquadrat/django-treeadmin
 
 Prerequisites
 -------------
 
-If you want to use django-treeadmin, make sure that the following points are fulfilled:
+If you want to use ls-django-treeadmin, make sure that the following points are fulfilled:
 
  * your project uses ``staticfiles``, either through Django's
    :mod:`django.contrib.staticfiles` (part of Django since 1.3) or
