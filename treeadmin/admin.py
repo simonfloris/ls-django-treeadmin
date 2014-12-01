@@ -251,7 +251,7 @@ class TreeAdmin(admin.ModelAdmin):
             # to the ModelAdmin class
             try:
                 item = getattr(self.__class__, field)
-            except (AttributeError, TypeError), e:
+            except (AttributeError, TypeError) as e:
                 continue
 
             attr = getattr(item, 'editable_boolean_field', None)
@@ -321,7 +321,7 @@ class TreeAdmin(admin.ModelAdmin):
             # Construct html snippets to send back to client for status update
             data = self._ajax_editable_booleans[attr](self, obj)
 
-        except Exception, e:
+        except Exception as e:
             logging.exception("Unhandled exception while toggling %s on %s", attr, obj)
             return HttpResponseServerError("Unable to toggle %s on %s" % (attr, obj))
 
@@ -402,7 +402,7 @@ class TreeAdmin(admin.ModelAdmin):
         if position in ('last-child', 'left', 'right'):
             try:
                 self.model._tree_manager.move_node(cut_item, pasted_on, position)
-            except InvalidMove, e:
+            except InvalidMove as e:
                 self.message_user(request, unicode(e))
                 return HttpResponse('FAIL')
 
