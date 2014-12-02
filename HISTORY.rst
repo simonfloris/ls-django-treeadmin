@@ -1,3 +1,8 @@
+0.4.4
+=====
+
+Fix error importing pull request for django > 1.6 support
+
 0.4.3
 =====
 
