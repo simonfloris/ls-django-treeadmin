@@ -188,6 +188,7 @@ treeadmin.jQuery(function($){
 
 						// save
 						$.post('.', {
+							'csrfmiddlewaretoken': $.cookie('csrftoken'),
 							'__cmd': 'move_node',
 							'position': position,
 							'cut_item': cutItem,
