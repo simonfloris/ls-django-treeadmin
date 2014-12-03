@@ -134,7 +134,7 @@ class ChangeList(main.ChangeList):
     def get_queryset(self, *args, **kwargs):
         mptt_opts = self.model._mptt_meta
         get_qs = getattr(super(ChangeList, self), 'get_queryset', super(ChangeList, self).get_query_set)
-        return get_qa(*args, **kwargs).order_by(mptt_opts.tree_id_attr, mptt_opts.left_attr)
+        return get_qs(*args, **kwargs).order_by(mptt_opts.tree_id_attr, mptt_opts.left_attr)
 
     if django_version < (1, 6):
         get_query_set = get_queryset
