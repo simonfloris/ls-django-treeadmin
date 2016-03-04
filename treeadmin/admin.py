@@ -13,6 +13,11 @@ try:
 except ImportError:
     import json
 
+try:
+    test = unicode
+except NameError:
+    unicode = str
+
 import logging
 
 
@@ -56,7 +61,7 @@ def _build_tree_structure(cls):
         all_nodes[p_id] = []
 
         if parent_id:
-            if not all_nodes.has_key(parent_id):
+            if parent_id not in all_nodes:
                 # This happens very rarely, but protect against parents that
                 # we have yet to iterate over.
                 all_nodes[parent_id] = []
@@ -133,7 +138,10 @@ class ChangeList(main.ChangeList):
 
     def get_queryset(self, *args, **kwargs):
         mptt_opts = self.model._mptt_meta
-        get_qs = getattr(super(ChangeList, self), 'get_queryset', super(ChangeList, self).get_query_set)
+        if django_version < (1, 6):
+            get_qs = super(ChangeList, self).get_query_set
+        else:
+            get_qs = super(ChangeList, self).get_queryset
         return get_qs(*args, **kwargs).order_by(mptt_opts.tree_id_attr, mptt_opts.left_attr)
 
     if django_version < (1, 6):
@@ -163,7 +171,12 @@ class ChangeList(main.ChangeList):
         super(ChangeList, self).get_results(request)
 
         opts = self.model_admin.opts
-        label = opts.app_label + '.' + opts.get_change_permission()
+        if django_version < (1, 6):
+            perm_name = opts.get_change_permission()
+        else:
+            from django.contrib.auth import get_permission_codename
+            perm_name = get_permission_codename('change', opts)
+        label = opts.app_label + '.' + perm_name
         for item in self.result_list:
             if self.model_admin.enable_object_permissions:
                 item.feincms_editable = self.model_admin.has_change_permission(request, item)
@@ -376,7 +389,12 @@ class TreeAdmin(admin.ModelAdmin):
         """
         if self.enable_object_permissions:
             opts = self.opts
-            r = request.user.has_perm(opts.app_label + '.' + opts.get_change_permission(), obj)
+            if django_version < (1, 6):
+                perm_name = opts.get_change_permission()
+            else:
+                from django.contrib.auth import get_permission_codename
+                perm_name = get_permission_codename('change', opts)
+            r = request.user.has_perm(opts.app_label + '.' + perm_name, obj)
         else:
             r = True
 

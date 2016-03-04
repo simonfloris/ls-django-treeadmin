@@ -15,7 +15,7 @@ function extract_item_id(elem_id) {
 
 /* Setup django csrf-token for ajax calls, necessary since Django 1.2.5 */
 /* See http://docs.djangoproject.com/en/1.2/releases/1.2.5/#csrf-exception-for-ajax-requests */
-treeadmin.jQquery(function($){
+treeadmin.jQuery(function($){
 
     /* Given an html snippet (in text form), parses it to extract the id attribute,
      then replace the corresponding element in the page with the snippet. The
