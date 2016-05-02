@@ -11,6 +11,8 @@ kudos for this.
 This version is a fork of `piquadrat`'s version, updated for django 1.7,
 and Python 3 as well.
 
+NOTE: this has not been tested with Django > 1.7
+
 .. _django-mptt: https://github.com/django-mptt/django-mptt
 .. _FeinCMS: http://www.feinheit.ch/media/labs/feincms/
 .. _piquadrat: http://github.com/piquadrat/django-treeadmin

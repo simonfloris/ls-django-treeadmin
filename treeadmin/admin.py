@@ -2,7 +2,13 @@ from django.conf import settings as django_settings
 from django.contrib import admin
 from django.contrib.admin.views import main
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound, HttpResponseServerError
+from django.http import (
+    HttpResponse,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    HttpResponseNotFound,
+    HttpResponseServerError
+)
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django import VERSION as django_version
@@ -28,7 +34,7 @@ def django_boolean_icon(field_val, alt_text=None, title=None):
     """
 
     # Origin: contrib/admin/templatetags/admin_list.py
-    BOOLEAN_MAPPING = { True: 'yes', False: 'no', None: 'unknown' }
+    BOOLEAN_MAPPING = {True: 'yes', False: 'no', None: 'unknown'}
     alt_text = alt_text or BOOLEAN_MAPPING[field_val]
     if title is not None:
         title = 'title="%s" ' % title
@@ -50,14 +56,16 @@ def _build_tree_structure(cls):
          ...
          }
     """
-    all_nodes = { }
+    all_nodes = {}
 
-    if hasattr(cls, '_mptt_meta'): # New-style MPTT
+    if hasattr(cls, '_mptt_meta'):  # New-style MPTT
         mptt_opts = cls._mptt_meta
     else:
         mptt_opts = cls._meta
 
-    for p_id, parent_id in cls.objects.order_by(mptt_opts.tree_id_attr, mptt_opts.left_attr).values_list("pk", "%s_id" % mptt_opts.parent_attr):
+    for p_id, parent_id in cls.objects.order_by(
+            mptt_opts.tree_id_attr,
+            mptt_opts.left_attr).values_list("pk", "%s_id" % mptt_opts.parent_attr):
         all_nodes[p_id] = []
 
         if parent_id:
@@ -89,7 +97,7 @@ def ajax_editable_boolean_cell(item, attr, text='', override=None):
         text = '&nbsp;(%s)' % unicode(text)
 
     if override is not None:
-        a = [ django_boolean_icon(override, text), text ]
+        a = [django_boolean_icon(override, text), text]
     else:
         value = getattr(item, attr)
         a = [
@@ -100,9 +108,10 @@ def ajax_editable_boolean_cell(item, attr, text='', override=None):
             text,
             ]
 
-    a.insert(0, '<div id="wrap_%s_%d">' % ( attr, item.id ))
+    a.insert(0, '<div id="wrap_%s_%d">' % (attr, item.id))
     a.append('</div>')
     return unicode(''.join(a))
+
 
 # ------------------------------------------------------------------------
 def ajax_editable_boolean(attr, short_description):
@@ -155,7 +164,6 @@ class ChangeList(main.ChangeList):
         def query_set(self, qs):
             self.queryset = qs
 
-
     def get_results(self, request):
         mptt_opts = self.model._mptt_meta
         if self.model_admin.filter_include_ancestors:
@@ -163,10 +171,17 @@ class ChangeList(main.ChangeList):
                 mptt_opts.tree_id_attr: tree_id,
                 mptt_opts.left_attr + '__lte': lft,
                 mptt_opts.right_attr + '__gte': rght,
-            }) for lft, rght, tree_id in \
-                self.queryset.values_list(mptt_opts.left_attr, mptt_opts.right_attr, mptt_opts.tree_id_attr)]
+            }) for lft, rght, tree_id in
+                self.queryset.values_list(
+                    mptt_opts.left_attr,
+                    mptt_opts.right_attr,
+                    mptt_opts.tree_id_attr
+                )
+            ]
             if clauses:
-                self.queryset = self.model._default_manager.filter(reduce(lambda p, q: p|q, clauses))
+                self.queryset = self.model._default_manager.filter(
+                    reduce(lambda p, q: p | q, clauses)
+                )
 
         super(ChangeList, self).get_results(request)
 
@@ -271,7 +286,7 @@ class TreeAdmin(admin.ModelAdmin):
             attr = getattr(item, 'editable_boolean_field', None)
             if attr:
                 def _fn(self, instance):
-                    return [ ajax_editable_boolean_cell(instance, _fn.attr) ]
+                    return [ajax_editable_boolean_cell(instance, _fn.attr)]
                 _fn.attr = attr
                 result_func = getattr(item, 'editable_boolean_result', _fn)
                 self._ajax_editable_booleans[attr] = result_func
@@ -302,7 +317,7 @@ class TreeAdmin(admin.ModelAdmin):
 
         self._collect_editable_booleans()
 
-        if not self._ajax_editable_booleans.has_key(attr):
+        if attr not in self._ajax_editable_booleans:
             return HttpResponseBadRequest("not a valid attribute %s" % attr)
 
         try:
@@ -330,7 +345,7 @@ class TreeAdmin(admin.ModelAdmin):
             setattr(obj, attr, not getattr(obj, attr))
             obj.save()
 
-            self._refresh_changelist_caches() # ???: Perhaps better a post_save signal?
+            self._refresh_changelist_caches()  # ???: Perhaps better a post_save signal?
 
             # Construct html snippets to send back to client for status update
             data = self._ajax_editable_booleans[attr](self, obj)
@@ -429,15 +444,17 @@ class TreeAdmin(admin.ModelAdmin):
             cut_item = self.model.objects.get(pk=cut_item.pk)
             cut_item.save()
 
-            self.message_user(request, ugettext('%s has been moved to a new position.') %
-                cut_item)
+            self.message_user(
+                request,
+                ugettext('{} has been moved to a new position.').format(cut_item)
+            )
             return HttpResponse('OK')
 
         self.message_user(request, ugettext('Did not understand moving instruction.'))
         return HttpResponse('FAIL')
 
     def _actions_column(self, instance):
-        return ['<div class="drag_handle"></div>',]
+        return ['<div class="drag_handle"></div>', ]
 
     def actions_column(self, instance):
         return u' '.join(self._actions_column(instance))

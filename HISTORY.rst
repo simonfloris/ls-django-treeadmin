@@ -1,4 +1,9 @@
-0.4.6
+0.4.7
+=====
+
+PEP 8 changes, copyright updates
+
+0.4.6 (Unreleased)
 =====
 
 Merge PR#2, update python3 support, rename JQquery to JQuery
