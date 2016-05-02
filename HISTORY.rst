@@ -1,3 +1,8 @@
+0.4.8
+=====
+
+Fix "too many values to unpack error", add .gitignore
+
 0.4.7
 =====
 
