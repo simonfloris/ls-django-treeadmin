@@ -1,3 +1,8 @@
+0.4.6
+=====
+
+Merge PR#2, update python3 support, rename JQquery to JQuery
+
 0.4.5
 =====
 
